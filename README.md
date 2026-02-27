@@ -2,7 +2,7 @@
 
 基于 React 和 Node.js 的现代化 Squad 游戏服务器管理系统，为您提供高效、可视化的运维体验。
 
-![仪表盘预览](screenshots/dashboard.png)
+![仪表盘预览](screenshots/preview.png)
 
 ## ✨ 核心特性
 
