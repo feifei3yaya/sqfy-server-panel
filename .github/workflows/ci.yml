@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  server-build-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        
+    - name: Install dependencies (Server)
+      working-directory: ./server
+      run: npm install
+      
+    - name: Generate Prisma Client
+      working-directory: ./server
+      run: npx prisma generate
+      
+    - name: Run Tests (Server)
+      working-directory: ./server
+      run: npm test
+      
+    - name: Build (Server)
+      working-directory: ./server
+      run: npm run build
+
+  client-build-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        
+    - name: Install dependencies (Client)
+      working-directory: ./client
+      run: npm install
+      
+    - name: Lint (Client)
+      working-directory: ./client
+      run: npm run lint
+      
+    - name: Test (Client)
+      working-directory: ./client
+      run: npm test
+
+    - name: Build (Client)
+      working-directory: ./client
+      run: npm run build

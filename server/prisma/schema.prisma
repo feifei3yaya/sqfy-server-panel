@@ -1,0 +1,199 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  username      String         @unique
+  passwordHash  String
+  email         String?        @unique
+  role          String         @default("user") // superadmin, admin, observer
+  twoFASecret   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  auditLogs     AuditLog[]
+  teamMembers   TeamMember[]
+  adminSessions AdminAttendance[]
+}
+
+model Server {
+  id            String         @id @default(uuid())
+  name          String
+  host          String
+  rconPort      Int
+  rconPassword  String
+  queryPort     Int?
+  
+  // File Access
+  fileProtocol  String?        // local, ftp, sftp
+  fileHost      String?
+  filePort      Int?
+  fileUser      String?
+  filePassword  String?
+  filePath      String?        // Directory path containing Admins.cfg
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  logs          Log[]
+  adminSessions AdminAttendance[]
+  whitelists    Whitelist[]
+  broadcasts    Broadcast[]
+  metrics       ServerMetric[]
+}
+
+model Player {
+  steamId       String         @id
+  nameHistory   String         // JSON array stored as string
+  reputation    Int            @default(0)
+  points        Int            @default(0)
+  totalPlaytime Int            @default(0) // in minutes
+  firstSeen     DateTime       @default(now())
+  lastSeen      DateTime       @default(now())
+  
+  bans          Ban[]
+  whitelists    Whitelist[]
+}
+
+model Ban {
+  id        String   @id @default(uuid())
+  steamId   String
+  reason    String
+  adminId   String?
+  expiresAt DateTime?
+  type      String   @default("steam_id") // steam_id, ip
+  createdAt DateTime @default(now())
+  
+  player    Player   @relation(fields: [steamId], references: [steamId])
+}
+
+model Whitelist {
+  id        String    @id @default(uuid())
+  steamId   String
+  serverId  String
+  expiresAt DateTime?
+  comment   String?
+  createdAt DateTime  @default(now())
+  
+  player    Player    @relation(fields: [steamId], references: [steamId])
+  server    Server    @relation(fields: [id], references: [id])
+}
+
+model Team {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  tag         String       @unique
+  ownerId     String
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  members     TeamMember[]
+}
+
+model TeamMember {
+  teamId   String
+  userId   String
+  role     String   @default("member") // owner, admin, member
+  joinedAt DateTime @default(now())
+  
+  team     Team     @relation(fields: [teamId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+  
+  @@id([teamId, userId])
+}
+
+model CDK {
+  code      String    @id
+  type      String    // points, vip, item
+  value     Int       // amount of points or days of vip
+  isUsed    Boolean   @default(false)
+  usedBy    String?
+  createdAt DateTime  @default(now())
+}
+
+model AdminAttendance {
+  id           String    @id @default(uuid())
+  adminId      String
+  serverId     String
+  sessionStart DateTime  @default(now())
+  sessionEnd   DateTime?
+  duration     Int?      // in minutes
+  
+  admin        User      @relation(fields: [adminId], references: [id])
+  server       Server    @relation(fields: [serverId], references: [id])
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  serverId  String
+  type      String   // info, warning, error, chat, kill, join, leave
+  content   String
+  timestamp DateTime @default(now())
+  
+  server    Server   @relation(fields: [serverId], references: [id])
+}
+
+model ServerMetric {
+  id          String   @id @default(uuid())
+  serverId    String
+  playerCount Int
+  maxPlayers  Int?
+  tps         Float?   // reserved for future use
+  timestamp   DateTime @default(now())
+
+  server      Server   @relation(fields: [serverId], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  target    String?
+  timestamp DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model SquadGroup {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  permissions String       // e.g. "kick,ban,changemap"
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  admins      SquadAdmin[]
+}
+
+model SquadAdmin {
+  id        String     @id @default(uuid())
+  steamId   String     @unique
+  name      String?
+  groupId   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  group     SquadGroup @relation(fields: [groupId], references: [id])
+}
+
+model Broadcast {
+  id        String   @id @default(uuid())
+  serverId  String
+  content   String
+  interval  Int      // in seconds, e.g., 600 for 10 minutes
+  enabled   Boolean  @default(true)
+  lastRun   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  server    Server   @relation(fields: [serverId], references: [id])
+}

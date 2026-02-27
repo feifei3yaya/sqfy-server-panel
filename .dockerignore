@@ -1,0 +1,14 @@
+# Server
+node_modules
+dist
+.env
+prisma/migrations
+.git
+.idea
+
+# Client
+dist
+.vscode
+.idea
+.env.local
+.DS_Store

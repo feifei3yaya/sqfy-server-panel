@@ -1,0 +1,49 @@
+{
+  "app": {
+    "title": "战术小队",
+    "subtitle": "管理面板"
+  },
+  "menu": {
+    "dashboard": "仪表盘",
+    "servers": "服务器管理",
+    "players": "玩家管理",
+    "cdk": "CDK 系统",
+    "chatLogs": "聊天记录",
+    "killLogs": "击杀记录",
+    "teams": "战队系统",
+    "configs": "配置编辑器",
+    "logs": "日志查看",
+    "broadcasts": "广播管理",
+    "attendance": "考勤报表",
+    "admins": "权限管理",
+    "logout": "退出登录"
+  },
+  "dashboard": {
+    "onlinePlayers": "当前在线玩家",
+    "live": "实时",
+    "onlineServers": "个服务器在线",
+    "activeAdmins": "值班管理员",
+    "bansToday": "今日封禁",
+    "trafficTrend": "24小时流量趋势",
+    "serverMatrix": "服务器监控",
+    "viewAll": "查看全部",
+    "recentBans": "最近封禁",
+    "onDuty": "当前值班",
+    "noAdmins": "暂无管理员值班"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "success": "操作成功",
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "search": "搜索"
+  },
+  "user": {
+    "operator": "当前操作员"
+  }
+}

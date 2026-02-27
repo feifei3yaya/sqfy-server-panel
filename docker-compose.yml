@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    container_name: squad-panel-server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server/prisma:/app/prisma
+      - ./plugins:/app/plugins
+      - ./logs:/app/logs
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - JWT_SECRET=super-secret-key-change-this
+      - PORT=3000
+    restart: always
+
+  client:
+    build: ./client
+    container_name: squad-panel-client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    restart: always
