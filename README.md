@@ -1,117 +1,79 @@
-# Squad Server Manager Panel (SQFY)
+# Squad 战术小队服务器管理面板 (SQFY-v1.0.0.0)
 
-A modern, web-based management panel for Squad game servers. Built with React, Node.js, and Docker.
+基于 React 和 Node.js 的现代化 Squad 游戏服务器管理系统，为您提供高效、可视化的运维体验。
 
-## 🚀 Features
+![仪表盘预览](screenshots/dashboard.png)
 
-*   **Server Management**: Add, edit, and monitor multiple Squad servers via RCON.
-*   **Real-time Dashboard**: Visualize online players, server status, and admin activity.
-*   **Player Management**: View player lists, kick/ban players, and view history.
-*   **RCON Terminal**: Execute raw RCON commands directly from the browser.
-*   **Config Editor**: Edit `Server.cfg`, `Admins.cfg`, and other config files via local file system or SFTP.
-*   **Log Analysis**: Search and filter chat logs, kill logs, and admin activity logs.
-*   **Team System**: Manage clans/teams and members.
-*   **Admin Attendance**: Track admin duty time with check-in/check-out system.
-*   **Plugin System**: Extend functionality with custom JavaScript plugins.
-*   **Role-Based Access**: Granular permissions for Superadmins, Admins, and Observers.
+## ✨ 核心特性
 
-## 🛠️ Tech Stack
+*   **服务器管理**：通过 RCON 轻松管理多个 Squad 游戏服务器，实时监控状态。
+*   **实时仪表盘**：可视化展示在线玩家、服务器负载、管理员值班情况等关键数据。
+*   **玩家管理**：查看玩家列表、踢出/封禁玩家、查询历史记录。
+*   **RCON 终端**：内置网页版终端，直接执行原生 RCON 指令。
+*   **配置编辑器**：在线编辑 `Server.cfg`、`Admins.cfg` 等配置文件，支持本地文件系统及 SFTP。
+*   **日志分析**：强大的日志搜索与过滤功能，涵盖聊天日志、击杀日志及管理员操作审计。
+*   **战队系统**：创建和管理战队/公会，审核成员申请。
+*   **考勤系统**：自动统计管理员在线执勤时长，生成考勤报表。
+*   **插件系统**：支持自定义 JavaScript 插件扩展功能。
+*   **权限控制**：细粒度的角色权限管理（超级管理员、服务器管理员、观察员）。
 
-*   **Frontend**: React, TypeScript, Vite, Ant Design, Recharts, TailwindCSS.
-*   **Backend**: Node.js, Express, TypeScript, Socket.io.
-*   **Database**: SQLite (default) or PostgreSQL, managed by Prisma ORM.
-*   **Deployment**: Docker & Docker Compose.
+## 🛠️ 技术栈
 
-## 📦 Quick Start (Docker)
+*   **前端**：React, TypeScript, Vite, Ant Design 5.x, TailwindCSS, Recharts
+*   **后端**：Node.js, Express, TypeScript, Socket.io
+*   **数据库**：SQLite (默认) / PostgreSQL, Prisma ORM
+*   **部署**：Docker & Docker Compose
 
-The easiest way to run the panel is using Docker.
+## 📦 快速开始 (Docker 部署)
 
-### Prerequisites
-*   Docker and Docker Compose installed.
+推荐使用 Docker 进行一键部署。
 
-### Installation
+### 前置要求
+*   已安装 Docker 和 Docker Compose。
 
-1.  **Clone the repository** (or download the source code).
-2.  **Run the deployment script**:
+### 安装步骤
 
-    **Linux/Mac**:
+1.  **克隆仓库**
     ```bash
-    chmod +x deploy.sh
-    ./deploy.sh
+    git clone https://github.com/feifei3yaya/sqfy-server-panel.git
+    cd sqfy-server-panel
     ```
 
-    **Windows**:
-    Double-click `start.bat` or run in CMD:
-    ```cmd
-    start.bat
-    ```
-
-    The script will:
-    *   Check for Docker installation.
-    *   Create a `.env` file from `.env.example` if missing.
-    *   Generate a secure JWT secret.
-    *   Build and start the containers.
-
-3.  **Access the Panel**:
-    Open your browser and navigate to `http://localhost` (or your server's IP).
-
-4.  **Initial Setup**:
-    *   Register a new account. **The first registered user will automatically become the Superadmin.**
-    *   Go to "Server Management" and add your Squad server details (Host, RCON Port, Password).
-
-## 🔧 Manual Development Setup
-
-If you want to contribute or run without Docker:
-
-### Prerequisites
-*   Node.js (v18+)
-*   npm
-
-### Steps
-
-1.  **Install Dependencies**:
+2.  **配置环境变量**
+    复制 `.env.example` 为 `.env` 并按需修改配置（默认配置即可运行）。
     ```bash
-    npm install
-    cd client && npm install
-    cd ../server && npm install
+    cp .env.example .env
     ```
 
-2.  **Database Setup**:
+3.  **启动服务**
     ```bash
-    cd server
-    npx prisma migrate dev
+    docker-compose up -d
     ```
 
-3.  **Start Backend**:
-    ```bash
-    cd server
-    npm run dev
-    # Runs on http://localhost:3000
-    ```
+4.  **访问面板**
+    浏览器访问 `http://localhost:3000` (或您配置的端口)。
+    初始账号注册后将自动成为超级管理员。
 
-4.  **Start Frontend**:
-    ```bash
-    cd client
-    npm run dev
-    # Runs on http://localhost:5173
-    ```
+## 🔧 手动开发启动
 
-## 📝 Configuration
+### 后端 (Server)
+```bash
+cd server
+npm install
+npm run dev
+```
 
-The application is configured via the `.env` file in the root directory.
+### 前端 (Client)
+```bash
+cd client
+npm install
+npm run dev
+```
 
-| Variable | Description | Default |
-|Or|---|---|
-| `DATABASE_URL` | Database connection string | `file:./dev.db` |
-| `JWT_SECRET` | Secret key for JWT tokens | (Randomly generated) |
-| `PORT` | Backend server port | `3000` |
-| `VITE_API_URL` | Frontend API URL (for dev) | `/api` |
+## 🔌 插件开发
 
-## 🔌 Plugins
-
-Plugins are located in the `plugins/` directory. Each plugin is a folder containing a `manifest.json` and an entry point (e.g., `index.js`).
-
-Example structure:
+插件位于 `plugins/` 目录。每个插件是一个包含 `manifest.json` 和入口文件（如 `index.js`）的文件夹。
+示例结构：
 ```
 plugins/
   my-plugin/
@@ -119,8 +81,6 @@ plugins/
     index.js
 ```
 
-See `plugins/example-plugin` for a reference implementation.
-
-## 📄 License
+## 📄 许可证
 
 MIT License
