@@ -1,0 +1,8 @@
+{
+  "name": "example-plugin",
+  "version": "1.0.0",
+  "description": "An example plugin that logs chat messages",
+  "author": "Trae AI",
+  "main": "index.js",
+  "events": ["CHAT_MESSAGE"]
+}

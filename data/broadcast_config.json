@@ -1,0 +1,15 @@
+{
+  "enabled": false,
+  "interval_seconds": 60,
+  "update_time": 1772740833,
+  "broadcasts": [
+    {
+      "number": "0",
+      "message": "欢迎使用战术小队冲锋衣面板系统，这是一条示例的广播消息。"
+    },
+    {
+      "number": "1",
+      "message": "战术小队冲锋衣系统是冲锋号社区旗下的项目之一。"
+    }
+  ]
+}

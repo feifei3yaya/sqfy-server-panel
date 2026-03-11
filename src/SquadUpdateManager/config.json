@@ -1,0 +1,9 @@
+{
+    "SteamCmdPath": "C:\\steamcmd\\steamcmd.exe",
+    "ServerPath": "D:\\squad_server",
+    "AppId": "403240",
+    "CheckIntervalMinutes": 60,
+    "UpdateScript": "update_squad.txt",
+    "LogFile": "SquadUpdateManager.log",
+    "ServerProcessName": "SquadGameServer"
+}

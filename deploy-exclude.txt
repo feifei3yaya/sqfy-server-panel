@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+.git
+.vscode
+.trae
+data
+logs
+__tests__
+test-results
+coverage
+*.log
+*.db
+.DS_Store
+Thumbs.db
