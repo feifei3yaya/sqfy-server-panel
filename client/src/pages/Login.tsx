@@ -155,10 +155,12 @@ const Login: React.FC = () => {
                 </Form.Item>
               </Form>
 
-              <div className="mt-4 text-center select-none opacity-50 hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[10px] text-amber-500/80 font-mono tracking-wider">
-                   ⚠ 本面板仅为内部使用
-                </span>
+              <div className="mt-4 text-center select-none">
+                <div className="bg-red-500/10 border border-red-500/30 rounded px-3 py-2">
+                  <span className="text-[11px] text-red-400 font-bold tracking-wider">
+                    ⚠️ 重要声明：本面板仅限内部小范围使用，请勿外传
+                  </span>
+                </div>
               </div>
             </div>
           </div>

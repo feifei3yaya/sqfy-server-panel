@@ -13,6 +13,11 @@ const TraeFooter: React.FC = () => {
         className="flex flex-col items-center gap-2 text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300"
         aria-label="Developed by 肥肥3鸭鸭 with TRAE, version FY-v1.0.0.0"
       >
+        {/* 内部使用声明 */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-red-500/10 border border-red-500/30">
+          <span className="text-red-400 font-bold text-xs tracking-wider">⚠️ 仅限内部使用，请勿外传</span>
+        </div>
+        
         <div className="flex items-center gap-1.5 font-medium">
           <span>本面板由</span>
           <span className="font-bold text-amber-500 hover:text-amber-400 transition-colors cursor-default drop-shadow-sm">肥肥3鸭鸭</span>

@@ -2,6 +2,8 @@
 
 基于 React 19 + TypeScript + Node.js + Prisma 的现代化 Squad 游戏服务器管理系统，为您提供高效、可视化的运维体验。
 
+⚠️ **重要声明：本面板仅限内部小范围使用，请勿外传或用于商业用途。**
+
 ![仪表盘预览](screenshots/preview.png)
 
 ## ✨ 核心特性
