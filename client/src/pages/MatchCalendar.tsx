@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Badge, Modal, Form, Input, DatePicker, Select, Button, message, Card } from 'antd';
+import type { CalendarProps } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import * as api from '../api/calendar';
@@ -33,7 +34,10 @@ const MatchCalendar: React.FC = () => {
     return matches.filter(m => dayjs(m.startTime).isSame(value, 'day'));
   };
 
-  const dateCellRender = (value: Dayjs) => {
+  const cellRender: CalendarProps<Dayjs>['cellRender'] = (value, info) => {
+    if (info.type !== 'date') {
+      return info.originNode;
+    }
     const listData = getListData(value);
     return (
       <ul className="list-none p-0 m-0">
@@ -73,7 +77,7 @@ const MatchCalendar: React.FC = () => {
     <div className="p-6 h-[calc(100vh-64px)] flex flex-col md:flex-row gap-6">
       <div className="flex-1 bg-[#1f1f1f] rounded-lg p-4 border border-[#2d3139] overflow-y-auto">
         <Calendar 
-          dateCellRender={dateCellRender} 
+          cellRender={cellRender} 
           onSelect={handleSelect}
           className="bg-transparent text-white"
         />

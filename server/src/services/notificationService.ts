@@ -1,8 +1,7 @@
-import { PrismaClient, NotificationRule } from '@prisma/client';
+import { NotificationRule } from '@prisma/client';
+import { prisma } from '../utils/prisma';
 import { smsService } from './smsService';
 import discordService from './discordService';
-
-const prisma = new PrismaClient();
 
 interface RuleContext {
   serverId?: string;
@@ -55,7 +54,8 @@ class NotificationService {
     }
 
     try {
-      const condition = JSON.parse(rule.condition);
+      // Use computed field from extension
+      const condition = (rule as any).conditionObj;
       
       switch (rule.type) {
         case 'player_count':
@@ -96,8 +96,8 @@ class NotificationService {
 
   private async triggerRule(rule: NotificationRule, context: RuleContext) {
     try {
-      const targets = JSON.parse(rule.targets) as string[];
-      const channels = JSON.parse(rule.channels) as string[];
+      const targets = (rule as any).targetsList as string[];
+      const channels = (rule as any).channelsList as string[];
       
       // Update lastTriggered immediately to prevent race conditions (though simple await is fine here)
       await prisma.notificationRule.update({

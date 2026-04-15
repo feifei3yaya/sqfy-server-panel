@@ -20,7 +20,6 @@ import {
 import type { SystemLog, LogSourceConfig } from '../api/systemLogs';
 
 const { RangePicker } = DatePicker;
-const { Option } = Select;
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
@@ -267,12 +266,13 @@ const SystemLogsViewer: React.FC = () => {
               setFilters({ ...filters, level: v });
               setPage(1);
             }}
-          >
-            <Option value="info">INFO</Option>
-            <Option value="warn">WARN</Option>
-            <Option value="error">ERROR</Option>
-            <Option value="debug">DEBUG</Option>
-          </Select>
+            options={[
+              { value: 'info', label: 'INFO' },
+              { value: 'warn', label: 'WARN' },
+              { value: 'error', label: 'ERROR' },
+              { value: 'debug', label: 'DEBUG' },
+            ]}
+          />
         </Form.Item>
         <Form.Item name="dateRange">
           <RangePicker 
@@ -361,12 +361,15 @@ const SystemLogsViewer: React.FC = () => {
             <Input placeholder="D:\logs\app.log" />
           </Form.Item>
           <Form.Item name="parserType" label="解析器类型" rules={[{ required: true }]}>
-            <Select onChange={() => form.setFieldsValue({ parserConfig: {} })}>
-              <Option value="json">JSON</Option>
-              <Option value="common">Nginx/Apache Common</Option>
-              <Option value="syslog">Syslog</Option>
-              <Option value="regex">Regex (自定义)</Option>
-            </Select>
+            <Select
+              onChange={() => form.setFieldsValue({ parserConfig: {} })}
+              options={[
+                { value: 'json', label: 'JSON' },
+                { value: 'common', label: 'Nginx/Apache Common' },
+                { value: 'syslog', label: 'Syslog' },
+                { value: 'regex', label: 'Regex (自定义)' },
+              ]}
+            />
           </Form.Item>
           <Form.Item
             noStyle

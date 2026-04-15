@@ -3,7 +3,6 @@ import { Table, Button, Modal, Form, Input, Select, message, Tag, Space, Typogra
 import { ReloadOutlined, PlusOutlined, GiftOutlined } from '@ant-design/icons';
 import * as api from '../api/cdk';
 
-const { Option } = Select;
 const { Text } = Typography;
 
 const CDKManager: React.FC = () => {
@@ -136,10 +135,12 @@ const CDKManager: React.FC = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleGenerate} className="mt-4">
           <Form.Item name="type" label="类型" initialValue="points">
-            <Select>
-              <Option value="points">积分</Option>
-              <Option value="vip">VIP</Option>
-            </Select>
+            <Select
+              options={[
+                { value: 'points', label: '积分' },
+                { value: 'vip', label: 'VIP' },
+              ]}
+            />
           </Form.Item>
           <Form.Item name="value" label="数值" rules={[{ required: true, message: '请输入数值' }]}>
             <Input type="number" placeholder="100" />

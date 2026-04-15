@@ -4,8 +4,6 @@ import { DeleteOutlined, ReloadOutlined, PlusOutlined, ThunderboltOutlined } fro
 import api from '../api/client';
 import dayjs from 'dayjs';
 
-const { Option } = Select;
-
 interface Ban {
   id: string;
   steamId: string;
@@ -161,11 +159,10 @@ const BanList: React.FC = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleAddBan} className="mt-4">
           <Form.Item name="serverId" label="目标服务器" rules={[{ required: true, message: '请选择服务器' }]}>
-            <Select placeholder="选择要执行封禁的服务器">
-              {servers.map(s => (
-                <Option key={s.id} value={s.id}>{s.name}</Option>
-              ))}
-            </Select>
+            <Select
+              placeholder="选择要执行封禁的服务器"
+              options={servers.map((s) => ({ value: s.id, label: s.name }))}
+            />
           </Form.Item>
           <Form.Item name="steamId" label="Steam ID" rules={[{ required: true, message: '请输入 Steam ID' }]}>
             <Input placeholder="7656119..." />

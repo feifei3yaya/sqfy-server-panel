@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.sq-fy.cn/sitemap.xml
+
+# 禁止爬取后台相关路径
+Disallow: /admin
+Disallow: /login
+Disallow: /panel
+Disallow: /api/

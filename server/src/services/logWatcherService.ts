@@ -1,13 +1,11 @@
 import fs from 'fs';
-import { PrismaClient } from '@prisma/client';
 import { Server as SocketIOServer } from 'socket.io';
+import { prisma, toJson } from '../utils/prisma';
 import { LogParser, ParsedLog } from '../utils/logParser';
 import rconService from './rconService';
 import ruleService from './ruleService';
 import discordService from './discordService';
 import gameStateService from './gameStateService';
-
-const prisma = new PrismaClient();
 
 class LogWatcherService {
   private static instance: LogWatcherService;
@@ -321,7 +319,7 @@ class LogWatcherService {
         serverId,
         matchId,
         type: 'KILL',
-        data: JSON.stringify(parsed.payload),
+        data: toJson(parsed.payload),
         timestamp: parsed.timestamp
       }
     });
@@ -342,7 +340,7 @@ class LogWatcherService {
         serverId,
         matchId,
         type: 'ADMIN_COMMAND',
-        data: JSON.stringify(parsed.payload),
+        data: toJson(parsed.payload),
         timestamp: parsed.timestamp
       }
     });
@@ -420,7 +418,7 @@ class LogWatcherService {
         serverId,
         matchId,
         type: 'VEHICLE_DESTROY',
-        data: JSON.stringify(parsed.payload),
+        data: toJson(parsed.payload),
         timestamp: parsed.timestamp
       }
     });
@@ -433,7 +431,7 @@ class LogWatcherService {
         serverId,
         matchId,
         type: 'DEPLOYABLE_DAMAGE',
-        data: JSON.stringify(parsed.payload),
+        data: toJson(parsed.payload),
         timestamp: parsed.timestamp
       }
     });

@@ -37,11 +37,11 @@ ssh Administrator@43.138.188.183 "cd D:\sqfy-panel\server && npm install --produ
 
 echo.
 echo [6/8] 安装前端依赖并构建...
-ssh Administrator@43.138.188.183 "cd D:\sqfy-panel\client && npm install && npm run build"
+ssh Administrator@43.138.188.183 "cd D:\sqfy-panel\client && echo VITE_API_URL=http://43.138.188.183:3000> .env.production && npm install && npm run build"
 
 echo.
 echo [7/8] 配置环境变量...
-ssh Administrator@43.138.188.183 "cd D:\sqfy-panel\server && echo DATABASE_URL=file:./prisma/dev.db> .env && echo JWT_SECRET=sqfy-panel-2026-production-key-8f7d9c2b1a3e5f7g>> .env && echo JWT_EXPIRES_IN=7d>> .env && echo PORT=3000>> .env && echo NODE_ENV=production>> .env && echo VITE_API_URL=http://43.138.188.183:3000>> .env"
+ssh Administrator@43.138.188.183 "cd D:\sqfy-panel\server && echo DATABASE_URL=file:./prisma/dev.db> .env && echo JWT_SECRET=sqfy-panel-2026-production-key-8f7d9c2b1a3e5f7g>> .env && echo JWT_EXPIRES_IN=7d>> .env && echo PORT=3000>> .env && echo NODE_ENV=production>> .env"
 
 echo.
 echo [8/8] 初始化数据库并启动服务...

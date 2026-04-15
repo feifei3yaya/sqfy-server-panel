@@ -52,7 +52,16 @@ export const getMatchDetail = async (req: Request, res: Response) => {
       return res.status(404).json(fail('Match not found', 4040));
     }
 
-    res.json(success(match));
+    // Parse data JSON for frontend convenience
+    const matchWithParsedEvents = {
+      ...match,
+      events: match.events.map(event => ({
+        ...event,
+        data: typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+      }))
+    };
+
+    res.json(success(matchWithParsedEvents));
   } catch (error) {
     res.status(500).json(fail('Failed to fetch match detail', 5000, error));
   }

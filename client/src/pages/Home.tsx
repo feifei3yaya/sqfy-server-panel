@@ -10,6 +10,7 @@ import StatGrid from '../components/dashboard/StatGrid';
 import ServerMonitorCard from '../components/dashboard/ServerMonitorCard';
 import ActivityFeed from '../components/dashboard/ActivityFeed';
 import QuickActions from '../components/dashboard/QuickActions';
+import ReadmePanel from '../components/dashboard/ReadmePanel';
 
 const Home: React.FC = () => {
   // const { t } = useTranslation();
@@ -106,9 +107,12 @@ const Home: React.FC = () => {
 
       {/* Main Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        
+
         {/* Main Tactical View - Server Monitor (3/4 width) */}
         <div className="lg:col-span-3 space-y-6">
+          {/* README 面板 - 显示重要声明 */}
+          <ReadmePanel />
+
           <div className="flex items-center justify-between border-b border-[var(--text-brand)]/20 pb-2">
              <h3 className="text-lg font-bold font-mono uppercase tracking-wider text-[var(--text-brand)] flex items-center">
                <span className="w-2 h-2 bg-[var(--text-brand)] mr-2 animate-pulse"></span>

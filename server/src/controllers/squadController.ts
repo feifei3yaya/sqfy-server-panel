@@ -12,7 +12,7 @@ import squadMonitorService from '../services/squadMonitorService';
  */
 export const getSquadServerStats = async (req: Request, res: Response) => {
   try {
-    const { serverId } = req.params;
+    const serverId = req.params.serverId as string;
     const stats = await squadMonitorService.getSquadServerStats(serverId);
     
     if (!stats) {
@@ -64,7 +64,8 @@ export const getAllSquadServersStats = async (req: Request, res: Response) => {
  */
 export const getPlayerStats = async (req: Request, res: Response) => {
   try {
-    const { serverId, steamId } = req.params;
+    const serverId = req.params.serverId as string;
+    const steamId = req.params.steamId as string;
     const player = await squadMonitorService.getPlayerStats(serverId, steamId);
     
     if (!player) {
@@ -94,7 +95,8 @@ export const getPlayerStats = async (req: Request, res: Response) => {
  */
 export const getTeamStats = async (req: Request, res: Response) => {
   try {
-    const { serverId, teamId } = req.params;
+    const serverId = req.params.serverId as string;
+    const teamId = req.params.teamId as string;
     const team = await squadMonitorService.getTeamStats(serverId, teamId);
     
     if (!team) {
@@ -124,7 +126,9 @@ export const getTeamStats = async (req: Request, res: Response) => {
  */
 export const getSquadStats = async (req: Request, res: Response) => {
   try {
-    const { serverId, teamId, squadId } = req.params;
+    const serverId = req.params.serverId as string;
+    const teamId = req.params.teamId as string;
+    const squadId = req.params.squadId as string;
     const squad = await squadMonitorService.getSquadStats(serverId, teamId, squadId);
     
     if (!squad) {

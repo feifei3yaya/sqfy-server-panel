@@ -114,7 +114,7 @@ const RconTerminal: React.FC<RconTerminalProps> = ({ serverId: propServerId }) =
             onChange={setServerId}
             placeholder="选择服务器"
             options={servers.map(s => ({ label: s.name, value: s.id }))}
-            dropdownStyle={{ backgroundColor: '#1f1f1f', color: 'white' }}
+            styles={{ popup: { root: { backgroundColor: '#1f1f1f', color: 'white' } } }}
           />
         </div>
       )}

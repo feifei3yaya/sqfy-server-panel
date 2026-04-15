@@ -1,5 +1,16 @@
-// @ts-ignore
-import { Rcon as SquadRcon } from 'squad-rcon';
+// Dynamic import to avoid ES Module issues with squad-rcon
+// Load squad-rcon dynamically to handle ES Module compatibility
+let SquadRcon: any = null;
+try {
+  // Use eval to bypass TypeScript compilation and avoid ES Module detection
+  const _require = eval('require');
+  const rconModule = _require('squad-rcon');
+  SquadRcon = rconModule.default || rconModule;
+  console.log('Squad RCON module loaded successfully');
+} catch (error) {
+  console.warn('Failed to load squad-rcon module, RCON functionality will be disabled:', error);
+}
+
 import { PrismaClient } from '@prisma/client';
 import { Server as SocketIOServer } from 'socket.io';
 import logService from './logService';

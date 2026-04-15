@@ -1,12 +1,105 @@
 import React, { useCallback, useState } from 'react';
-import { Tag, Button, Typography, Modal, Descriptions, Timeline, Card } from 'antd';
-import { EyeOutlined, TrophyOutlined } from '@ant-design/icons';
+import { Tag, Button, Typography, Modal, Descriptions, Timeline, Card, Badge } from 'antd';
+import { 
+  EyeOutlined, 
+  TrophyOutlined, 
+  AimOutlined, 
+  MedicineBoxOutlined, 
+  CarOutlined, 
+  ClockCircleOutlined 
+} from '@ant-design/icons';
 import UnifiedTable from '../components/common/UnifiedTable';
 import { getMatches, getMatchDetail } from '../api/match';
 import type { Match } from '../api/match';
 import dayjs from 'dayjs';
 
 const { Title } = Typography;
+
+interface GameEvent {
+  id: string;
+  type: 'KILL' | 'REVIVE' | 'VEHICLE_DESTROY' | string;
+  data: any;
+  timestamp: string;
+}
+
+const getEventIcon = (type: string) => {
+  switch (type.toUpperCase()) {
+    case 'KILL':
+      return <AimOutlined className="text-red-500" />;
+    case 'REVIVE':
+      return <MedicineBoxOutlined className="text-green-500" />;
+    case 'VEHICLE_DESTROY':
+      return <CarOutlined className="text-orange-500" />;
+    default:
+      return <ClockCircleOutlined className="text-blue-500" />;
+  }
+};
+
+const getEventColor = (type: string) => {
+  switch (type.toUpperCase()) {
+    case 'KILL':
+      return 'red';
+    case 'REVIVE':
+      return 'green';
+    case 'VEHICLE_DESTROY':
+      return 'orange';
+    default:
+      return 'blue';
+  }
+};
+
+const formatEventContent = (event: GameEvent) => {
+  const { type, data } = event;
+  
+  switch (type.toUpperCase()) {
+    case 'KILL':
+      if (typeof data === 'object' && data) {
+        const killer = data.killer || 'Unknown';
+        const victim = data.victim || 'Unknown';
+        const weapon = data.weapon ? ` with ${data.weapon}` : '';
+        return (
+          <div>
+            <span className="text-red-400 font-semibold">{killer}</span>
+            <span className="text-gray-400 mx-1">→</span>
+            <span className="text-gray-200">{victim}</span>
+            {weapon && <span className="text-gray-500 text-sm ml-2">({weapon})</span>}
+          </div>
+        );
+      }
+      return `Kill: ${JSON.stringify(data)}`;
+      
+    case 'REVIVE':
+      if (typeof data === 'object' && data) {
+        const medic = data.medic || 'Unknown';
+        const patient = data.patient || 'Unknown';
+        return (
+          <div>
+            <span className="text-green-400 font-semibold">{medic}</span>
+            <span className="text-gray-400 mx-1">revived</span>
+            <span className="text-gray-200">{patient}</span>
+          </div>
+        );
+      }
+      return `Revive: ${JSON.stringify(data)}`;
+      
+    case 'VEHICLE_DESTROY':
+      if (typeof data === 'object' && data) {
+        const vehicle = data.vehicle || 'Unknown vehicle';
+        const destroyer = data.destroyer ? `by ${data.destroyer}` : '';
+        return (
+          <div>
+            <span className="text-orange-400 font-semibold">{vehicle}</span>
+            <span className="text-gray-400"> destroyed</span>
+            {destroyer && <span className="text-gray-200 ml-1">{destroyer}</span>}
+          </div>
+        );
+      }
+      return `Vehicle destroyed: ${JSON.stringify(data)}`;
+      
+    default:
+      return <div className="text-gray-300">{type}: {typeof data === 'object' ? JSON.stringify(data) : data}</div>;
+  }
+};
 
 const MatchList: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -65,7 +158,7 @@ const MatchList: React.FC = () => {
       title: 'Events',
       dataIndex: ['_count', 'events'],
       key: 'events',
-      render: (count: number) => count || 0,
+      render: (count: number) => <Badge count={count || 0} showZero color="#1890ff" />,
     },
     {
       title: 'Action',
@@ -125,22 +218,30 @@ const MatchList: React.FC = () => {
               </Descriptions>
             </Card>
 
-            <Card title="Event Timeline (Under Construction)" className="bg-[#1f1f1f] border-gray-700">
-               {/* 
-                  TODO: Implement GameEvent fetching logic for this match.
-                  Currently the backend getMatchDetail returns events but we need to ensure they are populated.
-                  Since we just started tracking match events properly, old matches won't have much.
-               */}
+            <Card title="Event Timeline" className="bg-[#1f1f1f] border-gray-700">
                {selectedMatch.events && selectedMatch.events.length > 0 ? (
                  <Timeline mode="left">
-                   {selectedMatch.events.map((event: any) => (
-                     <Timeline.Item key={event.id} label={dayjs(event.timestamp).format('HH:mm:ss')}>
-                       {event.type} - {event.data}
+                   {selectedMatch.events.map((event: GameEvent) => (
+                     <Timeline.Item 
+                       key={event.id} 
+                       label={dayjs(event.timestamp).format('HH:mm:ss')}
+                       color={getEventColor(event.type)}
+                       dot={getEventIcon(event.type)}
+                     >
+                       <div className="py-1">
+                         <Tag color={getEventColor(event.type)} className="!mb-2 !text-xs">
+                           {event.type}
+                         </Tag>
+                         {formatEventContent(event)}
+                       </div>
                      </Timeline.Item>
                    ))}
                  </Timeline>
                ) : (
-                 <div className="text-gray-500 text-center py-4">No recorded events for this match</div>
+                 <div className="text-gray-500 text-center py-8">
+                   <ClockCircleOutlined className="text-4xl mb-2 opacity-30" />
+                   <div>No recorded events for this match</div>
+                 </div>
                )}
             </Card>
           </div>

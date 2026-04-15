@@ -78,7 +78,6 @@ JWT_SECRET=sqfy-panel-2026-production-key-8f7d9c2b1a3e5f7g
 JWT_EXPIRES_IN=7d
 PORT=3000
 NODE_ENV=production
-VITE_API_URL=http://43.138.188.183:3000
 MAX_FILE_SIZE=10
 UPLOAD_DIR=./uploads
 LOG_LEVEL=info

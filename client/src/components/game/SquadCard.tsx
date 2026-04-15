@@ -86,7 +86,7 @@ const SquadCard: React.FC<SquadCardProps> = ({
       ), 
       onClick: () => setIsRenameModalVisible(true) 
     },
-    { type: 'divider' },
+    { type: 'divider' as const },
     { 
       key: 'disband', 
       label: '解散小队', 

@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../utils/prisma';
 import rconService from '../services/rconService';
 import steamService from '../services/steamService';
 import gameStateService from '../services/gameStateService';
-
-const prisma = new PrismaClient();
 
 // Helper function to parse RCON output
 const parsePlayers = (rconOutput: string) => {

@@ -5,8 +5,6 @@ import api from '../api/client';
 import type { User } from '../api/user';
 import type { ServerPermission } from '../api/permission';
 
-const { Option } = Select;
-
 const PERMISSION_OPTIONS = [
   { label: '服务器控制 (启动/停止)', value: 'control' },
   { label: 'RCON/控制台', value: 'console' },
@@ -252,10 +250,12 @@ const UserList: React.FC = () => {
       >
         <Form form={editForm} layout="vertical" onFinish={handleUpdateUser}>
           <Form.Item name="role" label="面板角色" rules={[{ required: true }]}>
-            <Select>
-              <Option value="user">User (普通用户)</Option>
-              <Option value="superadmin">Superadmin (超级管理员)</Option>
-            </Select>
+            <Select
+              options={[
+                { value: 'user', label: 'User (普通用户)' },
+                { value: 'superadmin', label: 'Superadmin (超级管理员)' },
+              ]}
+            />
           </Form.Item>
           <Form.Item name="password" label="重置密码 (留空不修改)">
             <Input.Password placeholder="新密码" />

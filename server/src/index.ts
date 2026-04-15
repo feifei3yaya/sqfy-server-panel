@@ -5,9 +5,8 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
-import { PrismaClient } from '@prisma/client';
 import path from 'path';
-
+import { prisma } from './utils/prisma';
 import authRoutes from './routes/authRoutes';
 import serverRoutes from './routes/serverRoutes';
 import playerRoutes from './routes/playerRoutes';
@@ -49,7 +48,6 @@ import fs from 'fs';
 
 dotenv.config();
 
-const prisma = new PrismaClient();
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

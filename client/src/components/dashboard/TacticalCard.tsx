@@ -27,7 +27,7 @@ const TacticalCard: React.FC<TacticalCardProps> = ({
       {/* Main Content */}
       <Card
         className="h-full bg-[var(--bg-card)]/90 border border-[var(--border-color)] backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
-        bordered={false}
+        variant="borderless"
         styles={{ 
           body: { 
             padding: noPadding ? 0 : 24, 

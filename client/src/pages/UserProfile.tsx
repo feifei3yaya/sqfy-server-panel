@@ -13,8 +13,6 @@ import { updateUser } from '../store/authSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import UserAvatar from '../components/common/UserAvatar';
 
-const { Option } = Select;
-
 const UserProfile: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
@@ -203,11 +201,15 @@ const UserProfile: React.FC = () => {
                           </Col>
                           <Col xs={24} md={12}>
                             <Form.Item label="性别" name="gender">
-                              <Select className="bg-transparent" dropdownClassName="bg-[#1f1f1f]">
-                                <Option value="male">男</Option>
-                                <Option value="female">女</Option>
-                                <Option value="other">保密</Option>
-                              </Select>
+                              <Select
+                                className="bg-transparent"
+                                classNames={{ popup: { root: 'bg-[#1f1f1f]' } }}
+                                options={[
+                                  { value: 'male', label: '男' },
+                                  { value: 'female', label: '女' },
+                                  { value: 'other', label: '保密' },
+                                ]}
+                              />
                             </Form.Item>
                           </Col>
                         </Row>

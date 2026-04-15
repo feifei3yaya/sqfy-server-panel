@@ -1,30 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Select, message, Tag, Space, Divider, Drawer, Tooltip, Grid, Card, Switch } from 'antd';
-import { ReloadOutlined, PlusOutlined, DeleteOutlined, CodeOutlined, EditOutlined, LineChartOutlined, SoundOutlined, RocketOutlined } from '@ant-design/icons';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as ChartTooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Table, Button, Modal, Form, Input, Select, message, Tag, Space, Divider, Tooltip, Card, Switch } from 'antd';
+import { ReloadOutlined, PlusOutlined, DeleteOutlined, EditOutlined, SoundOutlined, RocketOutlined } from '@ant-design/icons';
 import * as api from '../api/server';
-import RconTerminal from './RconTerminal';
 import { socket } from '../utils/socket';
-import { useServerPermission } from '../hooks/useServerPermission';
 import { useAppSelector } from '../store/hooks';
 import { getErrorMessage } from '../utils/httpError';
 
-const { Option } = Select;
-const { useBreakpoint } = Grid;
-
 const ServerList: React.FC = () => {
-  const screens = useBreakpoint();
-  const isMobile = !screens.md;
   const user = useAppSelector((state) => state.auth.user);
-  const { hasPermission } = useServerPermission();
 
   const [servers, setServers] = useState<api.Server[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingServer, setEditingServer] = useState<api.Server | null>(null);
   const [form] = Form.useForm();
-  const [isMetricsVisible, setIsMetricsVisible] = useState(false);
-  const [metrics, setMetrics] = useState<any[]>([]);
-  const [metricsRange, setMetricsRange] = useState('24h');
   
   // Bulk Actions
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -168,24 +156,7 @@ const ServerList: React.FC = () => {
     setIsModalVisible(true);
   };
 
-  const fetchMetrics = async (serverId: string, range: string) => {
-    try {
-      const res = await api.getServerMetrics(serverId, range);
-      const formattedData = res.data.map((item: any) => ({
-        ...item,
-        time: new Date(item.timestamp).toLocaleTimeString(),
-        fullTime: new Date(item.timestamp).toLocaleString()
-      }));
-      setMetrics(formattedData);
-    } catch (error) {
-      message.error(getErrorMessage(error, '获取监控数据失败'));
-    }
-  };
 
-  const handleMetricsRangeChange = (range: string) => {
-    setMetricsRange(range);
-    // Metrics functionality removed
-  };
 
   const handleBulkAction = async (values: any) => {
     try {
@@ -401,12 +372,15 @@ const ServerList: React.FC = () => {
           <Divider>文件访问 (可选)</Divider>
           
           <Form.Item name="fileProtocol" label="协议" initialValue="none">
-            <Select placeholder="选择文件访问协议">
-              <Option value="none">无 (仅 RCON 管理)</Option>
-              <Option value="local">本地文件系统</Option>
-              <Option value="ftp">FTP</Option>
-              <Option value="sftp">SFTP</Option>
-            </Select>
+            <Select
+              placeholder="选择文件访问协议"
+              options={[
+                { value: 'none', label: '无 (仅 RCON 管理)' },
+                { value: 'local', label: '本地文件系统' },
+                { value: 'ftp', label: 'FTP' },
+                { value: 'sftp', label: 'SFTP' },
+              ]}
+            />
           </Form.Item>
 
           <Form.Item 

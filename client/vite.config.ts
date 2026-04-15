@@ -17,16 +17,36 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
       },
       '/socket.io': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://localhost:3000',
         ws: true,
         secure: false,
       },
     },
+  },
+  build: {
+    target: 'es2020',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 600,
+    // 启用代码分割，减少单个文件大小
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // 将第三方库单独打包
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['antd'],
+          icons: ['@ant-design/icons'],
+          state: ['@reduxjs/toolkit', 'react-redux'],
+        },
+      },
+    },
+    // 清理旧构建文件
+    emptyOutDir: true,
   },
   resolve: {
     alias: {

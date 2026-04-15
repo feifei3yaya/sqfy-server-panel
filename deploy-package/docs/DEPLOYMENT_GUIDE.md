@@ -81,7 +81,6 @@ JWT_EXPIRES_IN=7d
 
 # 服务器配置
 PORT=3000
-VITE_API_URL=http://localhost:3000
 
 # 文件上传
 MAX_FILE_SIZE=10
@@ -183,36 +182,16 @@ pm2 logs
 curl http://localhost:3000
 ```
 
-## 域名配置（可选）
+## 域名与 SSL 配置
 
-### 本地 hosts 文件配置
+请参考同目录下的 `DOMAIN_SSL_GUIDE.md` 文档，使用我们提供的自动化脚本 `setup-nginx.ps1` 快速配置 Nginx 和 SSL 证书。
 
-在客户端计算机编辑 `C:\Windows\System32\drivers\etc\hosts`，添加：
+### 简要步骤
 
-```
-43.138.188.183    squad-panel.local
-43.138.188.183    api.squad-panel.local
-```
-
-### Nginx 反向代理配置（可选）
-
-如果需要配置域名和 HTTPS，安装 Nginx 并配置：
-
-```nginx
-server {
-    listen 80;
-    server_name squad-panel.local;
-    
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
+1.  上传 `setup-nginx.ps1` 和 `nginx.conf` 到服务器。
+2.  在服务器上以管理员身份运行 PowerShell。
+3.  执行 `.\setup-nginx.ps1`。
+4.  根据脚本提示和指南完成证书申请。
 
 ## 访问测试
 

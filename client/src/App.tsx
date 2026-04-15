@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ConfigProvider, App as AntdApp, Spin } from 'antd';
 import { useAppSelector, useAppDispatch } from './store/hooks';
@@ -6,45 +6,49 @@ import { setUser, logout } from './store/authSlice';
 import { getMe } from './api/auth';
 import api from './api/client';
 import { getTheme } from './theme';
-
-// Components
 import MainLayout from './components/MainLayout';
-// import ErrorBoundary from './components/ErrorBoundary'; // Already wrapping App in main.tsx
+import { LOGIN_PATH, PANEL_ROOT_PATH, legacyPanelPaths, panelPath, SITE_PATH, GUIDE_PATH, ABOUT_PATH, KITS_PATH, RULES_PATH } from './routes';
 
-// Pages
-import Login from './pages/Login';
-import Home from './pages/Home';
-import ServerList from './pages/ServerList';
-import PlayerList from './pages/PlayerList';
-import BanList from './pages/BanList';
-import RconTerminal from './pages/RconTerminal';
-import ConfigEditor from './pages/ConfigEditor';
-import SquadAdminManager from './pages/SquadAdminManager';
-import KillLogViewer from './pages/KillLogViewer';
-import ChatLogViewer from './pages/ChatLogViewer';
-import LogsViewer from './pages/LogsViewer'; // Game Console logs
-import SystemLogsViewer from './pages/SystemLogsViewer'; // System logs
-import BroadcastManager from './pages/BroadcastManager';
-import CDKManager from './pages/CDKManager';
-import MatchCalendar from './pages/MatchCalendar';
-import MatchList from './pages/MatchList';
-import VIPManager from './pages/VIPManager';
-import UserList from './pages/UserList';
-import UserProfile from './pages/UserProfile';
+const Login = lazy(() => import('./pages/Login'));
+const OfficialSite = lazy(() => import('./pages/OfficialSite'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const KitsPage = lazy(() => import('./pages/KitsPage'));
+const NewbieGuide = lazy(() => import('./pages/NewbieGuide'));
+const RulesPage = lazy(() => import('./pages/RulesPage'));
+const Home = lazy(() => import('./pages/Home'));
+const ServerList = lazy(() => import('./pages/ServerList'));
+const PlayerList = lazy(() => import('./pages/PlayerList'));
+const BanList = lazy(() => import('./pages/BanList'));
+const RconTerminal = lazy(() => import('./pages/RconTerminal'));
+const ConfigEditor = lazy(() => import('./pages/ConfigEditor'));
+const SquadAdminManager = lazy(() => import('./pages/SquadAdminManager'));
+const KillLogViewer = lazy(() => import('./pages/KillLogViewer'));
+const ChatLogViewer = lazy(() => import('./pages/ChatLogViewer'));
+const LogsViewer = lazy(() => import('./pages/LogsViewer'));
+const SystemLogsViewer = lazy(() => import('./pages/SystemLogsViewer'));
+const BroadcastManager = lazy(() => import('./pages/BroadcastManager'));
+const CDKManager = lazy(() => import('./pages/CDKManager'));
+const MatchCalendar = lazy(() => import('./pages/MatchCalendar'));
+const MatchList = lazy(() => import('./pages/MatchList'));
+const VIPManager = lazy(() => import('./pages/VIPManager'));
+const UserList = lazy(() => import('./pages/UserList'));
+const UserProfile = lazy(() => import('./pages/UserProfile'));
+
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <Spin size="large" />
+  </div>
+);
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={LOGIN_PATH} replace />;
   }
 
   if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" />
-      </div>
-    );
+    return <PageLoader />;
   }
   
   return <>{children}</>;
@@ -54,15 +58,11 @@ const RoleRoute = ({ children, roles }: { children: React.ReactNode; roles: stri
   const user = useAppSelector((state) => state.auth.user);
 
   if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spin size="large" />
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={PANEL_ROOT_PATH} replace />;
   }
 
   return <>{children}</>;
@@ -79,12 +79,17 @@ function App() {
   }, [themeMode]);
 
   useEffect(() => {
+    const img = new Image();
+    img.src = '/bg.jpg';
+  }, []);
+
+  useEffect(() => {
     const interceptorId = api.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
           dispatch(logout());
-          navigate('/login');
+          navigate(LOGIN_PATH);
         }
         return Promise.reject(error);
       }
@@ -106,66 +111,66 @@ function App() {
         });
     }
   }, [isAuthenticated, user, dispatch]);
+  
   return (
     <ConfigProvider theme={getTheme(themeMode)}>
       <AntdApp>
-        <Routes>
-        <Route path="/login" element={<Login />} />
-        
-          <Route path="/" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Home />} />
-            
-            {/* Server Group */}
-            <Route path="servers" element={<ServerList />} />
-            <Route path="servers/config" element={<ConfigEditor />} />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path={SITE_PATH} element={<OfficialSite />} />
+            <Route path={ABOUT_PATH} element={<AboutPage />} />
+            <Route path={KITS_PATH} element={<KitsPage />} />
+            <Route path={GUIDE_PATH} element={<NewbieGuide />} />
+            <Route path={RULES_PATH} element={<RulesPage />} />
+            <Route path={LOGIN_PATH} element={isAuthenticated ? <Navigate to={PANEL_ROOT_PATH} replace /> : <Login />} />
+            <Route path={PANEL_ROOT_PATH} element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<Home />} />
+              <Route path="servers" element={<ServerList />} />
+              <Route path="servers/config" element={<ConfigEditor />} />
+              <Route path="players" element={<PlayerList />} />
+              <Route path="rcon" element={<RconTerminal />} />
+              <Route path="game/broadcasts" element={<BroadcastManager />} />
+              <Route path="bans" element={<BanList />} />
+              <Route path="operation/cdk" element={<CDKManager />} />
+              <Route path="operation/matches" element={<MatchList />} />
+              <Route path="operation/vip" element={<VIPManager />} />
+              <Route path="operation/calendar" element={<MatchCalendar />} />
+              <Route
+                path="users/list"
+                element={
+                  <RoleRoute roles={['superadmin']}>
+                    <UserList />
+                  </RoleRoute>
+                }
+              />
+              <Route
+                path="users/squad-admins"
+                element={
+                  <RoleRoute roles={['superadmin', 'admin']}>
+                    <SquadAdminManager />
+                  </RoleRoute>
+                }
+              />
+              <Route path="logs">
+                 <Route path="kill" element={<KillLogViewer />} />
+                 <Route path="chat" element={<ChatLogViewer />} />
+                 <Route path="console" element={<LogsViewer />} />
+                 <Route path="system" element={<SystemLogsViewer />} />
+              </Route>
 
-            {/* Game Group */}
-            <Route path="players" element={<PlayerList />} />
-            <Route path="rcon" element={<RconTerminal />} />
-            <Route path="game/broadcasts" element={<BroadcastManager />} />
-
-            {/* Ops Group */}
-            <Route path="bans" element={<BanList />} />
-            <Route path="operation/cdk" element={<CDKManager />} />
-            <Route path="operation/matches" element={<MatchList />} />
-            <Route path="operation/vip" element={<VIPManager />} />
-            <Route path="operation/calendar" element={<MatchCalendar />} />
-
-            {/* User Group */}
-            <Route
-              path="users/list"
-              element={
-                <RoleRoute roles={['superadmin']}>
-                  <UserList />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="users/squad-admins"
-              element={
-                <RoleRoute roles={['superadmin', 'admin']}>
-                  <SquadAdminManager />
-                </RoleRoute>
-              }
-            />
-            
-            <Route path="logs">
-               <Route path="kill" element={<KillLogViewer />} />
-               <Route path="chat" element={<ChatLogViewer />} />
-               <Route path="console" element={<LogsViewer />} />
-               <Route path="system" element={<SystemLogsViewer />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route path="*" element={<Navigate to={PANEL_ROOT_PATH} replace />} />
             </Route>
-
-            <Route path="profile" element={<UserProfile />} />
-            
-            {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
+            {legacyPanelPaths.map((path) => (
+              <Route key={path} path={path} element={<Navigate to={panelPath(path)} replace />} />
+            ))}
+            <Route path="*" element={<Navigate to={SITE_PATH} replace />} />
+          </Routes>
+        </Suspense>
       </AntdApp>
     </ConfigProvider>
   );

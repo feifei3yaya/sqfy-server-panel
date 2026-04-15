@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, Select, message, Tag, Space, Card, Tooltip, Tabs, Dropdown, Menu } from 'antd';
-import { ReloadOutlined, StopOutlined, WarningOutlined, DownOutlined, VideoCameraOutlined, EnvironmentOutlined, EyeOutlined, SwapOutlined, UserDeleteOutlined, ThunderboltOutlined, ClockCircleOutlined, TrophyOutlined, FileTextOutlined, SearchOutlined } from '@ant-design/icons';
+import { ReloadOutlined, StopOutlined, WarningOutlined, DownOutlined, VideoCameraOutlined, EnvironmentOutlined, EyeOutlined, SwapOutlined, UserDeleteOutlined, ThunderboltOutlined, ClockCircleOutlined, FileTextOutlined, SearchOutlined } from '@ant-design/icons';
 import api from '../api/client';
 import { Badge, List, Empty } from 'antd';
 
@@ -82,7 +82,7 @@ const PlayerList: React.FC = () => {
   const [isWarnModalVisible, setIsWarnModalVisible] = useState(false);
   const [warnMessage, setWarnMessage] = useState('');
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const [form] = Form.useForm();
+  Form.useForm();
   const [activeTab, setActiveTab] = useState<string>('squad');
   
   // Notes
@@ -480,7 +480,7 @@ const PlayerList: React.FC = () => {
       dataIndex: 'role',
       key: 'role',
       width: 80,
-      render: (role: string, player: Player) => (
+      render: (role: string) => (
         <Tooltip title={role}>
           <span className="text-xs">{role?.split('_')[1] || role}</span>
         </Tooltip>
@@ -513,7 +513,7 @@ const PlayerList: React.FC = () => {
       dataIndex: 'squadId',
       key: 'squadId',
       width: 100,
-      render: (squadId: string, player: Player) => squadId || <span className="panel-muted">无</span>,
+      render: (squadId: string) => squadId || <span className="panel-muted">无</span>,
     },
     {
       title: '战绩',

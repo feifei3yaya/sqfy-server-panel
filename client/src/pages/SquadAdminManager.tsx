@@ -5,7 +5,6 @@ import * as api from '../api/squadAdmin';
 import client from '../api/client';
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 const SquadAdminManager: React.FC = () => {
   const [groups, setGroups] = useState<api.SquadGroup[]>([]);
@@ -347,11 +346,10 @@ const SquadAdminManager: React.FC = () => {
             <Input placeholder="管理员名称" />
           </Form.Item>
           <Form.Item name="groupId" label="权限组" rules={[{ required: true, message: '请选择权限组' }]}>
-            <Select placeholder="选择权限组">
-              {groups.map(g => (
-                <Option key={g.id} value={g.id}>{g.name}</Option>
-              ))}
-            </Select>
+            <Select
+              placeholder="选择权限组"
+              options={groups.map((g) => ({ value: g.id, label: g.name }))}
+            />
           </Form.Item>
         </Form>
       </Modal>

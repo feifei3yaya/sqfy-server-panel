@@ -67,7 +67,10 @@ export const login = async (req: Request, res: Response) => {
       }
     });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ 
+        message: '用户名或密码错误',
+        code: 'INVALID_USERNAME_OR_PASSWORD' 
+      });
     }
 
     const validPassword = await bcrypt.compare(password, user.passwordHash);
@@ -80,7 +83,10 @@ export const login = async (req: Request, res: Response) => {
           status: 'failed'
         }
       });
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ 
+        message: '用户名或密码错误',
+        code: 'INVALID_USERNAME_OR_PASSWORD' 
+      });
     }
 
     if (user.twoFASecret) {
@@ -104,7 +110,10 @@ export const login = async (req: Request, res: Response) => {
             status: 'failed_2fa'
           }
         });
-        return res.status(401).json({ message: 'Invalid 2FA code' });
+        return res.status(401).json({ 
+          message: '双因素验证码错误',
+          code: 'INVALID_2FA_CODE' 
+        });
       }
     }
 

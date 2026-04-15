@@ -4,6 +4,7 @@ import { ReloadOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../store/hooks';
 import { useNavigate } from 'react-router-dom';
+import { panelPath } from '../../routes';
 
 const { Title, Text } = Typography;
 
@@ -77,7 +78,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onRefresh, refreshing
           <Button 
             type="primary" 
             icon={<SettingOutlined />} 
-            onClick={() => navigate('/servers/config')}
+            onClick={() => navigate(panelPath('/servers/config'))}
             className="h-10 bg-[var(--text-brand)] hover:bg-[var(--text-brand)]/90 border-none text-black font-bold tracking-wider"
           >
             {t('menu.configs')}

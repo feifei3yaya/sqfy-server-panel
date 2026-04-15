@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, toJson } from '../utils/prisma';
 
 export const getUserPermissions = async (req: Request, res: Response) => {
   const userId = req.params.userId as string;
@@ -19,10 +17,10 @@ export const getUserPermissions = async (req: Request, res: Response) => {
       }
     });
     
-    // Parse permissions JSON string
+    // Use computed field permissionsList from extension
     const formattedPermissions = permissions.map(p => ({
       ...p,
-      permissions: JSON.parse(p.permissions)
+      permissions: p.permissionsList
     }));
 
     res.json(formattedPermissions);
@@ -46,18 +44,18 @@ export const updatePermission = async (req: Request, res: Response) => {
         userId_serverId: { userId, serverId }
       },
       update: {
-        permissions: JSON.stringify(permissions)
+        permissions: toJson(permissions)
       },
       create: {
         userId,
         serverId,
-        permissions: JSON.stringify(permissions)
+        permissions: toJson(permissions)
       }
     });
     
     res.json({
       ...perm,
-      permissions: JSON.parse(perm.permissions)
+      permissions: perm.permissionsList
     });
   } catch (error) {
     console.error('Error updating permission:', error);

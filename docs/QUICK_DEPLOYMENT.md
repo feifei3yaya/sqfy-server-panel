@@ -114,9 +114,6 @@ JWT_EXPIRES_IN=7d
 PORT=3000
 NODE_ENV=production
 
-# 前端 API 地址
-VITE_API_URL=http://43.138.188.183:3000
-
 # 文件上传
 MAX_FILE_SIZE=10
 UPLOAD_DIR=./uploads

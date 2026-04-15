@@ -81,7 +81,6 @@ JWT_EXPIRES_IN=7d
 
 # 服务器配置
 PORT=3000
-VITE_API_URL=http://localhost:3000
 
 # 文件上传
 MAX_FILE_SIZE=10

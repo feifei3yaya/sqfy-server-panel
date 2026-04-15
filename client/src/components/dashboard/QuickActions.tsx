@@ -3,6 +3,7 @@ import { Button, Row, Col } from 'antd';
 import { CloudServerOutlined, SearchOutlined, FileTextOutlined, TeamOutlined } from '@ant-design/icons';
 import TacticalCard from './TacticalCard';
 import { useNavigate } from 'react-router-dom';
+import { panelPath } from '../../routes';
 
 const QuickActionBtn = ({ icon, label, path, navigate }: { 
   icon: React.ReactNode, 
@@ -33,16 +34,16 @@ const QuickActions: React.FC = () => {
       <div className="p-4">
         <Row gutter={[8, 8]}>
           <Col span={12}>
-            <QuickActionBtn icon={<CloudServerOutlined />} label="服务器列表" path="/servers" navigate={navigate} />
+            <QuickActionBtn icon={<CloudServerOutlined />} label="服务器列表" path={panelPath('/servers')} navigate={navigate} />
           </Col>
           <Col span={12}>
-            <QuickActionBtn icon={<SearchOutlined />} label="玩家查询" path="/players" navigate={navigate} />
+            <QuickActionBtn icon={<SearchOutlined />} label="玩家查询" path={panelPath('/players')} navigate={navigate} />
           </Col>
           <Col span={12}>
-            <QuickActionBtn icon={<FileTextOutlined />} label="日志中心" path="/logs" navigate={navigate} />
+            <QuickActionBtn icon={<FileTextOutlined />} label="日志中心" path={panelPath('/logs')} navigate={navigate} />
           </Col>
           <Col span={12}>
-            <QuickActionBtn icon={<TeamOutlined />} label="管理员管理" path="/users/squad-admins" navigate={navigate} />
+            <QuickActionBtn icon={<TeamOutlined />} label="管理员管理" path={panelPath('/users/squad-admins')} navigate={navigate} />
           </Col>
         </Row>
       </div>

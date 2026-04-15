@@ -7,8 +7,6 @@ import { getWhitelist, addWhitelist, removeWhitelist } from '../api/whitelist';
 import { getServers } from '../api/server';
 import { syncConfig } from '../api/squadAdmin';
 
-const { Option } = Select;
-
 const VIPManager: React.FC = () => {
   const [whitelist, setWhitelist] = useState<Whitelist[]>([]);
   const [servers, setServers] = useState<any[]>([]);
@@ -126,11 +124,8 @@ const VIPManager: React.FC = () => {
             className="w-48"
             onChange={setSelectedServerId}
             value={selectedServerId}
-          >
-            {servers.map(s => (
-              <Option key={s.id} value={s.id}>{s.name}</Option>
-            ))}
-          </Select>
+            options={servers.map((s) => ({ value: s.id, label: s.name }))}
+          />
         </div>
         <Space>
           <Button icon={<ReloadOutlined />} onClick={fetchData}>刷新</Button>
@@ -162,11 +157,10 @@ const VIPManager: React.FC = () => {
       >
         <Form form={form} layout="vertical" onFinish={handleAdd}>
           <Form.Item name="serverId" label="服务器" rules={[{ required: true }]}>
-            <Select placeholder="选择服务器">
-              {servers.map(s => (
-                <Option key={s.id} value={s.id}>{s.name}</Option>
-              ))}
-            </Select>
+            <Select
+              placeholder="选择服务器"
+              options={servers.map((s) => ({ value: s.id, label: s.name }))}
+            />
           </Form.Item>
           <Form.Item name="steamId" label="Steam ID" rules={[{ required: true }]}>
             <Input placeholder="7656119xxxxxxxxxx" />
