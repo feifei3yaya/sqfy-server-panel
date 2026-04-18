@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FFB800;
+  --color-accent: #f59e0b;
+  --color-danger: #ef4444;
+  --color-dark: #0f0f0f;
+  --color-secondary: #1a1a1a;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-dark);
+  color: white;
+  min-height: 100vh;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
