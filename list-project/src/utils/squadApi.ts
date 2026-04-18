@@ -17,8 +17,9 @@ export interface ServerData {
 }
 
 export const fetchServers = async (): Promise<ServerData[]> => {
-  const res = await fetch('https://api.battlemetrics.com/servers?game=squad&filter[search]=FY&page[size]=50');
+  const res = await fetch('https://api.battlemetrics.com/servers?filter[game]=squad&filter[search]=FY&page[size]=50');
   const data = await res.json();
+  if (!data.data) return [];
   return data.data.map((item: any) => {
     const details = item.attributes.details || {};
     return {
@@ -31,12 +32,12 @@ export const fetchServers = async (): Promise<ServerData[]> => {
       port: item.attributes.port,
       map: details.map || 'Unknown',
       gameMode: details.gameMode || 'AAS',
-      playTime: details.timePlayed || 0,
+      playTime: details.squad_playTime || 0,
       version: details.version || 'Unknown',
       country: item.attributes.country,
-      licenseId: details.licenseId,
+      licenseId: details.licensedServer ? '是' : undefined,
       isModServer: details.modded || false,
-      nextMap: details.nextLayer || 'Unknown'
+      nextMap: details.squad_nextLayer || 'Unknown'
     };
   });
 };

@@ -124,7 +124,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
                   {server.licenseId && (
                     <div className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-[10px] sm:text-xs font-medium border border-yellow-500/20">
                       <BadgeCheck size={10} className="sm:w-3 sm:h-3" />
-                      认证服 #{server.licenseId}
+                      官方认证服
                     </div>
                   )}
                   <div className="flex items-center gap-1 sm:gap-1.5 hidden xs:flex">
