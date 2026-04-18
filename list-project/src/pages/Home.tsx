@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { fetchServers, ServerData } from '../utils/squadApi';
+import { useEffect, useState } from 'react';
+import { fetchServers } from '../utils/squadApi';
+import type { ServerData } from '../utils/squadApi';
 import ServerCard from '../components/ServerCard';
-import { RefreshCw, Search, Activity, Users, MapPin, Globe } from 'lucide-react';
+import { RefreshCw, Search, Activity, Users, MapPin, Globe, Server } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Home() {

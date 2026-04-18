@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { ServerData, formatPlayTime } from '../utils/squadApi';
+import { useState } from 'react';
+import { formatPlayTime } from '../utils/squadApi';
+import type { ServerData } from '../utils/squadApi';
 import { Users, Map, Server, Clock, ChevronDown, MonitorPlay, BadgeCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
