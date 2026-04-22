@@ -17,7 +17,7 @@ export interface ServerData {
 }
 
 export const fetchServers = async (): Promise<ServerData[]> => {
-  const res = await fetch('https://api.battlemetrics.com/servers?filter[game]=squad&filter[search]=FY&page[size]=50');
+  const res = await fetch('https://api.battlemetrics.com/servers?filter[game]=squad&page[size]=100&sort=-players');
   const data = await res.json();
   if (!data.data) return [];
   return data.data.map((item: any) => {
