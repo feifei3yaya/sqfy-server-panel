@@ -16,11 +16,17 @@ export interface ServerData {
   nextMap?: string;
 }
 
-export const fetchServers = async (region: 'CN' | 'GLOBAL' = 'CN'): Promise<ServerData[]> => {
+export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED'): Promise<ServerData[]> => {
   let url = 'https://api.battlemetrics.com/servers?filter[game]=squad&filter[status]=online&page[size]=100&sort=-players';
-  if (region === 'CN') {
-    url += '&filter[countries]=CN';
+  
+  if (type === 'LICENSED') {
+    // BattleMetrics licensed servers
+    url += '&filter[features][4]=true';
+  } else {
+    // Custom/Modded servers
+    url += '&filter[features][4]=false';
   }
+  
   const res = await fetch(url);
   const data = await res.json();
   if (!data.data) return [];
@@ -39,7 +45,7 @@ export const fetchServers = async (region: 'CN' | 'GLOBAL' = 'CN'): Promise<Serv
       playTime: details.squad_playTime || 0,
       version: details.version || 'Unknown',
       country: item.attributes.country,
-      licenseId: details.licensedServer ? '是' : undefined,
+      licenseId: details.licenseId,
       isModServer: details.modded || false,
       nextMap: details.squad_nextLayer || 'Unknown'
     };

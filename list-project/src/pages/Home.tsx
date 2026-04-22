@@ -9,7 +9,7 @@ export default function Home() {
   const [servers, setServers] = useState<ServerData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState<'CN'|'GLOBAL'>('CN');
+  const [activeTab, setActiveTab] = useState<'LICENSED'|'CUSTOM'>('LICENSED');
 
   const loadData = async () => {
     setLoading(true);
@@ -78,21 +78,21 @@ export default function Home() {
         </div>
 
         <div className="flex gap-1 sm:gap-2 border-b border-slate-800 pb-px overflow-x-auto scrollbar-hide">
-          <button 
-            onClick={() => setActiveTab('CN')}
-            className={`flex items-center justify-center flex-1 sm:flex-none gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all relative whitespace-nowrap ${activeTab === 'CN' ? 'text-yellow-500' : 'text-slate-500 hover:text-slate-300'}`}
-          >
-            <MapPin size={16} className="sm:w-[18px] sm:h-[18px]" />
-            国内服 (CN)
-            {activeTab === 'CN' && <motion.div layoutId="activeTabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 shadow-[0_0_8px_rgba(255,184,0,0.5)]" />}
-          </button>
-          <button 
-            onClick={() => setActiveTab('GLOBAL')}
-            className={`flex items-center justify-center flex-1 sm:flex-none gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all relative whitespace-nowrap ${activeTab === 'GLOBAL' ? 'text-yellow-500' : 'text-slate-500 hover:text-slate-300'}`}
+          <button
+            onClick={() => setActiveTab('LICENSED')}
+            className={`flex items-center justify-center flex-1 sm:flex-none gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all relative whitespace-nowrap ${activeTab === 'LICENSED' ? 'text-yellow-500' : 'text-slate-500 hover:text-slate-300'}`}
           >
             <Globe size={16} className="sm:w-[18px] sm:h-[18px]" />
-            国际服 (Global)
-            {activeTab === 'GLOBAL' && <motion.div layoutId="activeTabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 shadow-[0_0_8px_rgba(255,184,0,0.5)]" />}
+            官方认证服
+            {activeTab === 'LICENSED' && <motion.div layoutId="activeTabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 shadow-[0_0_8px_rgba(255,184,0,0.5)]" />}
+          </button>
+          <button
+            onClick={() => setActiveTab('CUSTOM')}
+            className={`flex items-center justify-center flex-1 sm:flex-none gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all relative whitespace-nowrap ${activeTab === 'CUSTOM' ? 'text-yellow-500' : 'text-slate-500 hover:text-slate-300'}`}
+          >
+            <Server size={16} className="sm:w-[18px] sm:h-[18px]" />
+            自定义服务器 (Custom)
+            {activeTab === 'CUSTOM' && <motion.div layoutId="activeTabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 shadow-[0_0_8px_rgba(255,184,0,0.5)]" />}
           </button>
         </div>
 
