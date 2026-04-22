@@ -14,7 +14,7 @@ export default function Home() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const data = await fetchServers();
+      const data = await fetchServers(activeTab);
       setServers(data);
     } catch (e) {
       console.error(e);
@@ -24,12 +24,11 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [activeTab]);
 
   const filtered = servers.filter(s => {
     const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.ip.includes(search);
-    const matchRegion = activeTab === 'CN' ? s.country === 'CN' : s.country !== 'CN';
-    return matchSearch && matchRegion;
+    return matchSearch;
   });
 
   const activeTabServersCount = filtered.length;
