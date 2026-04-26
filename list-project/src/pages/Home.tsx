@@ -14,7 +14,7 @@ export default function Home() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const data = await fetchServers(activeTab);
+      const data = await fetchServers(activeTab, regionFilter);
       setServers(data);
     } catch (e) {
       console.error(e);
@@ -24,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
-  }, [activeTab]);
+  }, [activeTab, regionFilter]);
 
   const filtered = servers.filter(s => {
     const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.ip.includes(search);

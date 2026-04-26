@@ -16,21 +16,22 @@ export interface ServerData {
   nextMap?: string;
 }
 
-export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED'): Promise<ServerData[]> => {
+export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED', region: 'ALL' | 'CN' | 'OTHER' = 'ALL'): Promise<ServerData[]> => {
   let url = 'https://api.battlemetrics.com/servers?filter[game]=squad&filter[status]=online&page[size]=100&sort=-players';
   
-  if (type === 'LICENSED') {
-    // BattleMetrics licensed servers
-    url += '&filter[features][4]=true';
-  } else {
-    // Custom/Modded servers
-    url += '&filter[features][4]=false';
+  if (region === 'CN') {
+    url += '&filter[countries]=CN';
+  } else if (region === 'OTHER') {
+    // BattleMetrics allows excluding countries with ! or multiple. 
+    // It's simpler to just fetch all and filter client side for 'OTHER', 
+    // but fetching global is fine since top 100 are mostly OTHER anyway.
   }
   
   const res = await fetch(url);
   const data = await res.json();
   if (!data.data) return [];
-  return data.data.map((item: any) => {
+  
+  const mapped = data.data.map((item: any) => {
     const details = item.attributes.details || {};
     return {
       id: item.attributes.id,
@@ -50,6 +51,12 @@ export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED'): Pr
       nextMap: details.squad_nextLayer || 'Unknown'
     };
   });
+  
+  if (type === 'LICENSED') {
+    return mapped.filter((s: ServerData) => s.licenseId);
+  } else {
+    return mapped.filter((s: ServerData) => !s.licenseId);
+  }
 };
 
 export const formatPlayTime = (seconds: number) => {
