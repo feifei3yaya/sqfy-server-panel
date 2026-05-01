@@ -16,11 +16,17 @@ export interface ServerData {
   nextMap?: string;
 }
 
+export interface FetchServersResult {
+  servers: ServerData[];
+  nextCursor?: string;
+}
+
 export const fetchServers = async (
   type: 'LICENSED' | 'CUSTOM' = 'LICENSED',
   region: 'ALL' | 'CN' | 'OTHER' = 'ALL',
-  search: string = ''
-): Promise<ServerData[]> => {
+  search: string = '',
+  cursor?: string
+): Promise<FetchServersResult> => {
   let url = 'https://api.battlemetrics.com/servers?filter[game]=squad&filter[status]=online&page[size]=100&sort=-players';
   
   if (region === 'CN') {
@@ -32,9 +38,13 @@ export const fetchServers = async (
     url += `&filter[search]=${encodeURIComponent(q)}`;
   }
 
+  if (cursor) {
+    url += `&page[cursor]=${encodeURIComponent(cursor)}`;
+  }
+
   const res = await fetch(url);
   const data = await res.json();
-  if (!data.data) return [];
+  if (!data.data) return { servers: [] };
   
   let mapped: ServerData[] = data.data.map((item: any) => {
     const details = item.attributes.details || {};
@@ -61,10 +71,13 @@ export const fetchServers = async (
     mapped = mapped.filter((s) => s.country !== 'CN');
   }
 
+  const nextUrl = data?.links?.next;
+  const nextCursor = typeof nextUrl === 'string' ? new URL(nextUrl).searchParams.get('page[cursor]') ?? undefined : undefined;
+
   if (type === 'LICENSED') {
-    return mapped.filter((s) => s.licenseId);
+    return { servers: mapped.filter((s) => s.licenseId), nextCursor };
   } else {
-    return mapped.filter((s) => !s.licenseId);
+    return { servers: mapped.filter((s) => !s.licenseId), nextCursor };
   }
 };
 

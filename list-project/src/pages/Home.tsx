@@ -8,19 +8,35 @@ import { motion } from 'framer-motion';
 export default function Home() {
   const [servers, setServers] = useState<ServerData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'LICENSED'|'CUSTOM'>('LICENSED');
   const [regionFilter, setRegionFilter] = useState<'ALL' | 'CN' | 'OTHER'>('ALL');
+  const [nextCursor, setNextCursor] = useState<string | undefined>(undefined);
 
   const loadData = async (q: string = search) => {
     setLoading(true);
     try {
-      const data = await fetchServers(activeTab, regionFilter, q);
-      setServers(data);
+      const result = await fetchServers(activeTab, regionFilter, q);
+      setServers(result.servers);
+      setNextCursor(result.nextCursor);
     } catch (e) {
       console.error(e);
     }
     setLoading(false);
+  };
+
+  const loadMore = async () => {
+    if (!nextCursor || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const result = await fetchServers(activeTab, regionFilter, search, nextCursor);
+      setServers((prev) => [...prev, ...result.servers]);
+      setNextCursor(result.nextCursor);
+    } catch (e) {
+      console.error(e);
+    }
+    setLoadingMore(false);
   };
 
   useEffect(() => {
@@ -148,7 +164,7 @@ export default function Home() {
             />
           </div>
           <button 
-            onClick={loadData}
+            onClick={() => loadData(search)}
             disabled={loading}
             className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 sm:py-3.5 bg-[#1a1a1a] hover:bg-slate-800 border border-slate-700/50 rounded-xl text-sm sm:text-base text-white transition-colors"
           >
@@ -160,6 +176,16 @@ export default function Home() {
 
         <div className="flex flex-col gap-4">
           {filtered.map(s => <ServerCard key={s.id} server={s} />)}
+          {!loading && filtered.length > 0 && nextCursor && (
+            <button
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#1a1a1a] hover:bg-slate-800 border border-slate-700/50 rounded-xl text-sm text-white transition-colors"
+            >
+              <RefreshCw size={18} className={loadingMore ? 'animate-spin' : ''} />
+              加载更多
+            </button>
+          )}
           {!loading && filtered.length === 0 && (
             <div className="py-20 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
               <Server size={48} className="text-slate-700" />
