@@ -10,6 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'LICENSED'|'CUSTOM'>('LICENSED');
+  const [regionFilter, setRegionFilter] = useState<'ALL' | 'CN' | 'OTHER'>('ALL');
 
   const loadData = async () => {
     setLoading(true);
@@ -28,7 +29,9 @@ export default function Home() {
 
   const filtered = servers.filter(s => {
     const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.ip.includes(search);
-    return matchSearch;
+    const matchRegion =
+      regionFilter === 'ALL' ? true : regionFilter === 'CN' ? s.country === 'CN' : s.country !== 'CN';
+    return matchSearch && matchRegion;
   });
 
   const activeTabServersCount = filtered.length;
@@ -93,6 +96,30 @@ export default function Home() {
             <Server size={16} className="sm:w-[18px] sm:h-[18px]" />
             自定义服务器 (Custom)
             {activeTab === 'CUSTOM' && <motion.div layoutId="activeTabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 shadow-[0_0_8px_rgba(255,184,0,0.5)]" />}
+          </button>
+        </div>
+
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+          <button
+            onClick={() => setRegionFilter('ALL')}
+            className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border text-sm font-medium transition-colors whitespace-nowrap ${regionFilter === 'ALL' ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-500' : 'bg-[#1a1a1a] border-slate-700/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800'}`}
+          >
+            <Globe size={16} />
+            全部
+          </button>
+          <button
+            onClick={() => setRegionFilter('CN')}
+            className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border text-sm font-medium transition-colors whitespace-nowrap ${regionFilter === 'CN' ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-500' : 'bg-[#1a1a1a] border-slate-700/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800'}`}
+          >
+            <MapPin size={16} />
+            国服
+          </button>
+          <button
+            onClick={() => setRegionFilter('OTHER')}
+            className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border text-sm font-medium transition-colors whitespace-nowrap ${regionFilter === 'OTHER' ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-500' : 'bg-[#1a1a1a] border-slate-700/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800'}`}
+          >
+            <Globe size={16} />
+            外服
           </button>
         </div>
 

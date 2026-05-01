@@ -21,17 +21,13 @@ export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED', reg
   
   if (region === 'CN') {
     url += '&filter[countries]=CN';
-  } else if (region === 'OTHER') {
-    // BattleMetrics allows excluding countries with ! or multiple. 
-    // It's simpler to just fetch all and filter client side for 'OTHER', 
-    // but fetching global is fine since top 100 are mostly OTHER anyway.
   }
   
   const res = await fetch(url);
   const data = await res.json();
   if (!data.data) return [];
   
-  const mapped = data.data.map((item: any) => {
+  let mapped: ServerData[] = data.data.map((item: any) => {
     const details = item.attributes.details || {};
     return {
       id: item.attributes.id,
@@ -52,10 +48,14 @@ export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED', reg
     };
   });
   
+  if (region === 'OTHER') {
+    mapped = mapped.filter((s) => s.country !== 'CN');
+  }
+
   if (type === 'LICENSED') {
-    return mapped.filter((s: ServerData) => s.licenseId);
+    return mapped.filter((s) => s.licenseId);
   } else {
-    return mapped.filter((s: ServerData) => !s.licenseId);
+    return mapped.filter((s) => !s.licenseId);
   }
 };
 
