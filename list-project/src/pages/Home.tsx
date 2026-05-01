@@ -12,10 +12,10 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'LICENSED'|'CUSTOM'>('LICENSED');
   const [regionFilter, setRegionFilter] = useState<'ALL' | 'CN' | 'OTHER'>('ALL');
 
-  const loadData = async () => {
+  const loadData = async (q: string = search) => {
     setLoading(true);
     try {
-      const data = await fetchServers(activeTab, regionFilter);
+      const data = await fetchServers(activeTab, regionFilter, q);
       setServers(data);
     } catch (e) {
       console.error(e);
@@ -24,11 +24,24 @@ export default function Home() {
   };
 
   useEffect(() => {
-    loadData();
+    loadData(search);
   }, [activeTab, regionFilter]);
 
+  useEffect(() => {
+    const t = setTimeout(() => {
+      loadData(search);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [search]);
+
   const filtered = servers.filter(s => {
-    const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.ip.includes(search);
+    const q = search.trim().toLowerCase();
+    const matchSearch =
+      !q ||
+      s.name.toLowerCase().includes(q) ||
+      s.ip.includes(q) ||
+      s.map.toLowerCase().includes(q) ||
+      (s.nextMap || '').toLowerCase().includes(q);
     const matchRegion =
       regionFilter === 'ALL' ? true : regionFilter === 'CN' ? s.country === 'CN' : s.country !== 'CN';
     return matchSearch && matchRegion;

@@ -16,13 +16,22 @@ export interface ServerData {
   nextMap?: string;
 }
 
-export const fetchServers = async (type: 'LICENSED' | 'CUSTOM' = 'LICENSED', region: 'ALL' | 'CN' | 'OTHER' = 'ALL'): Promise<ServerData[]> => {
+export const fetchServers = async (
+  type: 'LICENSED' | 'CUSTOM' = 'LICENSED',
+  region: 'ALL' | 'CN' | 'OTHER' = 'ALL',
+  search: string = ''
+): Promise<ServerData[]> => {
   let url = 'https://api.battlemetrics.com/servers?filter[game]=squad&filter[status]=online&page[size]=100&sort=-players';
   
   if (region === 'CN') {
     url += '&filter[countries]=CN';
   }
   
+  const q = search.trim();
+  if (q) {
+    url += `&filter[search]=${encodeURIComponent(q)}`;
+  }
+
   const res = await fetch(url);
   const data = await res.json();
   if (!data.data) return [];
